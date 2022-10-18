@@ -61,20 +61,24 @@ if __name__ == '__main__':
                     .format(filename, expected_shape, predy.shape, columnNames)
         assert(predy.shape == expected_shape)
 
-        from sklearn.metrics import confusion_matrix, accuracy_score
+        from sklearn.metrics import accuracy_score
+        answers = np.unique(testy)
         accuracy = accuracy_score(testy, predy)
+        scores = {answer: accuracy_score(testy[testy == answer],
+                                         predy[testy == answer])
+                  for answer in answers}
 
         result['tests'] = [
-            mktest('Accuracy meets threshold', 1.0, accuracy >= 0.92),
+            mktest(f'"{answer}" Accuracy Meets Threshold',
+                   0.2, scores[answer] >= 0.9)
+            for answer in answers
         ]
 
         result['leaderboard'] = [
             mkleaderboardentry('Total Accuracy', accuracy),
         ] + [
-            mkleaderboardentry(f'"{answer}" Accuracy',
-                               accuracy_score(testy[testy == answer],
-                                              predy[testy == answer]))
-            for answer in np.unique(testy)
+            mkleaderboardentry(f'"{answer}" Accuracy', scores[answer])
+            for answer in answers
         ]
 
         del result['output']
