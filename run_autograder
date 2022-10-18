@@ -1,0 +1,28 @@
+#!/bin/sh
+
+if ! [ -f submission/scores.csv ] ; then
+    echo "submission/scores.csv missing!"
+    echo "Attempting to run with first CSV under submission/*"
+
+    find submission -type f # Print all files so we know what's there
+    
+    find submission -type f -name "*.csv" | while read csvfile ; do
+        echo "Attempting '$csvfile'"
+        if python3 grade.py "$csvfile" ; then
+            exit 0
+        else
+            echo "Grading $csvfile failed."
+        fi
+    done
+
+    sed "s;FILE_ERROR_DAT;Errors were encountered in all of: `find submission -type f -name \"*.csv\" | tr \"\n\" \" \"`;" < results/results.json > results/result2.json
+    mv results/result2.json results/results.json 
+
+    
+else
+    echo "Found submission/scores.csv. Grading..."
+    if ! python3 grade.py submission/scores.csv ; then
+        sed "s;FILE_ERROR_DAT;scores.csv was the only file I tried, because it had the right name. Check your formatting?;" < results/results.json > results/result2.json
+        mv results/result2.json results/results.json
+    fi
+fi
