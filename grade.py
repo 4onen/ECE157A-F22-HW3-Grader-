@@ -68,10 +68,15 @@ if __name__ == '__main__':
         scores = {answer: accuracy_score(testy[testy == answer],
                                          predy[testy == answer])
                   for answer in answers}
+        code = bool(list(Path('submission').glob('*.py'))
+                    or list(Path('submission').glob('*.ipynb')))
 
         result['tests'] = [
             mktest(f'Overall Accuracy Meets Threshold',
-                   1.0, accuracy >= 0.8)
+                   0.5, accuracy >= 0.8),
+            mktest(f'Code submitted',
+                   0.5, code,
+                   output=None if code else "No code submitted! We expected to find a .py or .ipynb file in your submission folder."),
         ]
 
         result['leaderboard'] = [
