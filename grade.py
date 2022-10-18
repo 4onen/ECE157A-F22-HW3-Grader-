@@ -1,5 +1,6 @@
 import json
 import csv
+from math import floor
 from pathlib import Path
 from typing import Any, Dict, Final, List, Tuple, Union
 import numpy as np
@@ -37,7 +38,7 @@ def mktest(name: str, maxscore: float, passes: bool, output: str = None):
 
 
 def mkleaderboardentry(name: str, value: float, asc=False):
-    return {'name': name, 'value': value}
+    return {'name': name, 'value': floor(value*100)}
 
 
 if __name__ == '__main__':
@@ -69,9 +70,8 @@ if __name__ == '__main__':
                   for answer in answers}
 
         result['tests'] = [
-            mktest(f'"{answer}" Accuracy Meets Threshold',
-                   0.2, scores[answer] >= 0.9)
-            for answer in answers
+            mktest(f'Overall Accuracy Meets Threshold',
+                   1.0, accuracy >= 0.8)
         ]
 
         result['leaderboard'] = [
