@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Any, Dict, Final, List, Tuple, Union
 import numpy as np
 
-expected_shape: Final[Tuple[int, int]] = (1465, 1)
+expected_shape: Final[Tuple[int, int]] = (1200, 1)
 
 defaultResult: Final[Dict[str, Any]] = \
     {'output': 'Encountered unexpected error trying to grade assignment. Contact course staff! FILE_ERROR_DAT',
